@@ -6,21 +6,21 @@ import os
 from glob import glob
 
 
-def show_image_mask_real(img, mask, real, cmap='gray'):  # visualisation
-    fig = plt.figure(figsize=(5, 5))
-
-    plt.subplot(1, 3, 1)
+def show_image_mask_real_loss(img, mask, real, loss, cmap='gray'):  # visualisation
+    fig = plt.figure()
+    plt.subplot(2, 2, 1)
     plt.imshow(img, cmap=cmap)
     plt.axis('off')
 
-    plt.subplot(1, 3, 2)
+    plt.subplot(2, 2, 2)
     plt.imshow(mask, cmap=cmap)
     plt.axis('off')
 
-    plt.subplot(1, 3, 3)
+    plt.subplot(2, 2, 3)
     plt.imshow(real, cmap=cmap)
 
-
+    plt.subplot(2, 2, 4)
+    plt.plot(loss)
 
 class TrainDataset(data.Dataset):
     def __init__(self, root=''):
@@ -30,6 +30,7 @@ class TrainDataset(data.Dataset):
         for img_path in self.img_files:
             basename = os.path.basename(img_path)
             self.mask_files.append(os.path.join(root, 'mask', basename[:-4] + '_mask.png'))
+
 
     def __getitem__(self, index):
         img_path = self.img_files[index]
