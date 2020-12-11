@@ -12,12 +12,13 @@ class CNNSEG(nn.Module): # Define your model
     def __init__(self):
         super(CNNSEG, self).__init__()
         #torch.nn.Conv2d(in_channels: int, out_channels: int, kernel_size: Union[T, Tuple[T, T]])
-        self.conv = nn.Conv2d(1, 4, 3)
+        self.layers = nn.ModuleList([nn.Conv2d(1, 8, 3), nn.Conv2d(8, 6, 3), nn.Conv2d(6, 4, 3), nn.Upsample(size=(96, 96))])
         # fill in the constructor for your model here
     def forward(self, x):
         # fill in the forward function for your model here
-        return self.conv(x)
-
+        for layer in self.layers:
+            x = layer(x)
+        return x
 if __name__ == '__main__':
 
     model = CNNSEG() # We can now create a model using your defined segmentation model
@@ -40,14 +41,14 @@ if __name__ == '__main__':
 
         img, mask = sample
         # Converting the mask image [10,96,96] to a matrix [10,1,94,94]. The 94 is to match the forward function output.
-        mask_converted = convert_to_4_chan(mask[:, 1:-1, 1:-1])
+        mask_converted = convert_to_4_chan(mask)
 
         # Adding a new dimension to the img
         img = img[:, None, :, :]
 
         # Calculating the expected mask
         out = model.forward(img)
-
+        print(out.shape)
         # Display the predicted mask (after conversion to the image format)
         img_1_chan = convert_to_1_chan(out)
         # Display the image and the mask
