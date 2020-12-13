@@ -18,6 +18,7 @@ def show_image_mask_real_loss(img, mask, real, loss, cmap='gray'):  # visualisat
 
     plt.subplot(2, 2, 3)
     plt.imshow(real, cmap=cmap)
+    plt.axis('off')
 
     plt.subplot(2, 2, 4)
     plt.plot(loss)
@@ -64,6 +65,7 @@ def convert_to_4_chan(img):
     result[:, 2, :, :] = torch.where(img == 2, 1, 0)
     result[:, 3, :, :] = torch.where(img == 3, 1, 0)
     return result
+
 
 
 def convert_to_1_chan(img):
